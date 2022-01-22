@@ -12,6 +12,10 @@ const UsuarioSchema=Schema({
       required:[true,'El email es obligatorio'],
       unique:true,
     },
+    codigoinvitacion:{
+      type:String,
+      unique:true,
+    },
     password:{
       type:String,
       required:[true,'La contraseña es obligatoria'],
@@ -36,7 +40,8 @@ const UsuarioSchema=Schema({
 });
 
 UsuarioSchema.methods.toJSON=function () {
-  const{__v,password,...usuario}= this.toObject();
+  const{__v,password,_id,...usuario}= this.toObject();
+  usuario.uid=_id;
   return usuario;
 }
 

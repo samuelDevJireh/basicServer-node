@@ -1,6 +1,7 @@
 const {response,request}= require('express');
 const Usuario= require('../models/user');
 const bcryptjs= require('bcrypt');
+const generator = require('generate-password');
 
 
 const userGet =async (req=request, res = response)=> {
@@ -52,8 +53,14 @@ const userPost =async (req, res = response)=> {
     //optenemos lo que viene en el requets
     //const body= req.body;
     const{nombre,correo,password,rol}= req.body; //desestructuracion de json
+
+    var codigoinvitacion =generator.generate({
+      length: 7,
+      numbers: true,
+      strict:true
+    });
     try {
-      const usuario=new Usuario({nombre,correo,password,rol});
+      const usuario=new Usuario({nombre,correo,password,rol,codigoinvitacion});
       //encryptar pasword
       const salt=bcryptjs.genSaltSync();
       usuario.password=bcryptjs.hashSync(password,salt);
@@ -75,7 +82,7 @@ const userPut = async(req, res = response)=> {
     //para recibir parametro en segmentos tenemos wue definirlos en la ruta
     //y reciperarlos con params
     const idreq= req.params.id;
-    const {_id,password,google,correo,...resto}= req.body;
+    const {_id,password,google,correo,codigoinvitacion,...resto}= req.body;
     //validar contra la base de datos
     if (password) {
       const salt=bcryptjs.genSaltSync();
@@ -91,15 +98,18 @@ const userDelete =async (req, res = response)=> {
 
     const idreq= req.params.id;
 
-    //const usuario=await Usuario.findByIdAndDelete(idreq);
+    //const uid= req.uid;
+    //const userAuth= req.userAuth;
 
+    //const usuario=await Usuario.findByIdAndDelete(idreq);
     const usuario=await Usuario.findByIdAndUpdate(idreq,{estado:false},{new:true})
     
     res.json({
         //ok:true,
         //msg:'Delete Api controllador'
         
-        usuario
+        usuario,
+  
       })
   }
 

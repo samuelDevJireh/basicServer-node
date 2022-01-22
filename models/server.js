@@ -11,6 +11,7 @@ const { dbConecctions } = require('../db/config');
         this.app= express();
         this.port=process.env.PORT
         this.usuariosRoutePath='/api/usuarios';
+        this.authRoutePath='/api/auth';
         //conectar database
         this.conectarBaseDatos();
 
@@ -37,6 +38,7 @@ const { dbConecctions } = require('../db/config');
 
 
     routes(){
+       this.app.use(this.authRoutePath,require('../routes/auth'));
        this.app.use(this.usuariosRoutePath,require('../routes/user'));
     }
 

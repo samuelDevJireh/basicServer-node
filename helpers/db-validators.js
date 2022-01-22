@@ -20,6 +20,20 @@ const emailexist = async(correo ='') =>{
     }
 }
 
+const emailLogin = async(correo ='') =>{
+   const userExist= await Usuario.findOne({correo});
+    if (!userExist) {
+        //  return res.status(400).json({
+        //  errors:[{msg:'Este correo ya esta registrado'}]
+        // });
+        throw new Error(`email invalido`);   
+    }
+
+    if(!userExist.estado){
+      throw new Error(`Cuenta bloqueada temporalmente contacta al Admin`);   
+  }
+}
+
 const isValidId = async(id = '')=> {
     const usuarioExist= await Usuario.findById(id)
     if (!usuarioExist) {
@@ -31,5 +45,6 @@ const isValidId = async(id = '')=> {
   module.exports={
       isValidRol,
       emailexist,
-      isValidId
+      isValidId,
+      emailLogin
   }
