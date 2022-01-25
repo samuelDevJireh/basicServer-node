@@ -8,17 +8,14 @@ const { googleverify } = require("../helpers/google-verify");
 
 const login = async (req = request, res = response )=>{
 
-
-    const { correo,password}= req.body;
-   
+    const { correo,password}= req.body;   
     try {
         // verificar si el email existe
         const usuario= await Usuario.findOne({correo});
             if (!usuario) {
                  return res.status(400).json({
                  errors:[{msg:'email incorrecto'}]
-                });
-                  
+                });           
             }
          // verificar que el usuario este activo
             if(!usuario.estado){
@@ -26,7 +23,6 @@ const login = async (req = request, res = response )=>{
                     errors:[{msg:'sin acceso'}]
                    });
             }
-
         //verificar contraeña
         const validPassword= bcryptjs.compareSync(password,usuario.password)
             if (!validPassword) {
@@ -34,32 +30,28 @@ const login = async (req = request, res = response )=>{
                     errors:[{msg:'password incorrecto'}]
                    });
             }
-
         //generar jwt
         const token =await generarJWT(usuario.id);
         res.json({
             usuario,
             token
         });
+
     } catch (error) {
         console.log(error);
        return res.status(500).json({
             msg:"Problema interno contacte al administrador"
         });
-    }
-
-    
+    }  
 }
 
 const googleSingIn= async(req = request,res= response) => {
 
     const {id_token}= req.body;
-
     try {
       const {nombre,img,correo}= await  googleverify(id_token)
 
       let usuario= await Usuario.findOne({correo});
-
       if (!usuario) {
           //si el usuario no existe se crea
       const data={
@@ -80,9 +72,7 @@ const googleSingIn= async(req = request,res= response) => {
         msg:"Usuario bloqueado"
     });
    }
-
-      //console.log(payload);
-      
+      //console.log(payload);  
        //generar jwt
        const token =await generarJWT(usuario.id);
 
@@ -97,8 +87,6 @@ const googleSingIn= async(req = request,res= response) => {
              msg:"No se pudo veryficar token google"
          });
     }
-
-  
 }
 
 

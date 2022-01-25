@@ -10,6 +10,13 @@ const { dbConecctions } = require('../db/config');
     constructor(){
         this.app= express();
         this.port=process.env.PORT
+        this.path={
+            usuariosRoute:'/api/usuarios',
+            authRoute:'/api/auth',
+            categoriasRoute:'/api/categorias',
+            productoRoute:'/api/productos',
+            buscarRoute:'/api/buscar'
+        }
         this.usuariosRoutePath='/api/usuarios';
         this.authRoutePath='/api/auth';
         //conectar database
@@ -18,7 +25,6 @@ const { dbConecctions } = require('../db/config');
         //middlewares funciones que añaden funciones al servidor
         this.middlewares();
         
-
         //rustas de app
         this.routes();
     }
@@ -40,6 +46,9 @@ const { dbConecctions } = require('../db/config');
     routes(){
        this.app.use(this.authRoutePath,require('../routes/auth'));
        this.app.use(this.usuariosRoutePath,require('../routes/user'));
+       this.app.use(this.path.categoriasRoute,require('../routes/categorias'));
+       this.app.use(this.path.productoRoute,require('../routes/productos'));
+       this.app.use(this.path.buscarRoute,require('../routes/buscar'));
     }
 
 

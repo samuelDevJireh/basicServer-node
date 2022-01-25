@@ -35,7 +35,7 @@ router.post('/',
 router.delete('/:id',[
   validarJWT,
  //isAdminRol, middleware riguroso
- validarRol('ADMIN','USER','SUPER_ADMIN'),
+  validarRol('ADMIN','USER','SUPER_ADMIN'),
   check('id','no es un Idvalido').isMongoId(),
   check('id',).custom(isValidId),//valida que exista el id
   validarCampos
