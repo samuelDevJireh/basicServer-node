@@ -1,7 +1,8 @@
  
 const express = require('express');
-var cors = require('cors');
+const cors = require('cors');
 const { dbConecctions } = require('../db/config');
+const fileUpload = require('express-fileupload');
 
 
 
@@ -15,7 +16,8 @@ const { dbConecctions } = require('../db/config');
             authRoute:'/api/auth',
             categoriasRoute:'/api/categorias',
             productoRoute:'/api/productos',
-            buscarRoute:'/api/buscar'
+            buscarRoute:'/api/buscar',
+            uploadsRoute:'/api/uploads',
         }
         this.usuariosRoutePath='/api/usuarios';
         this.authRoutePath='/api/auth';
@@ -40,6 +42,12 @@ const { dbConecctions } = require('../db/config');
         this.app.use(express.json());
         //directorio pulico
         this.app.use(express.static('public'));
+        //carga de archivos
+        this.app.use(fileUpload({
+            useTempFiles : true,
+            tempFileDir : '/tmp/',
+            createParentPath:true
+        }));
     }
 
 
@@ -49,6 +57,7 @@ const { dbConecctions } = require('../db/config');
        this.app.use(this.path.categoriasRoute,require('../routes/categorias'));
        this.app.use(this.path.productoRoute,require('../routes/productos'));
        this.app.use(this.path.buscarRoute,require('../routes/buscar'));
+       this.app.use(this.path.uploadsRoute,require('../routes/uploads'));
     }
 
 

@@ -82,7 +82,7 @@ const buscarProducto= async(termino, res = response) => {
         }
 
         const regex=new RegExp(termino,'i');
-
+        //esto nos ayudaria abuscar por categoria el producto
         //     const categories = await Category.find({ name: regex, status: true})
         
         // const products = await Product.find({
